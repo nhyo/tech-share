@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { upload } from '@vercel/blob/client';
+
   type GalleryImage = {
     url: string;
     pathname: string;
@@ -9,6 +11,7 @@
   let error = $state('');
   let message = $state('');
   let images = $state<GalleryImage[]>([]);
+  let uploading = $state(false);
 
   async function uploadImage() {
     if (!selectedFile) return;
@@ -16,24 +19,21 @@
     error = '';
     message = '';
     imageUrl = '';
-    const form = new FormData();
-    form.append('file', selectedFile);
+    uploading = true;
 
-    const response = await fetch('/api/blob', {
-      method: 'POST',
-      body: form
-    });
-
-    const data: { error?: string; message?: string; url?: string } =
-      await response.json();
-
-    if (!response.ok) {
-      error = data.error ?? 'Upload failed';
-      return;
+    try {
+      const blob = await upload(`tech-share/${selectedFile.name}`, selectedFile, {
+        access: 'public',
+        handleUploadUrl: '/api/blob',
+        multipart: selectedFile.size > 100 * 1024 * 1024
+      });
+      
+      imageUrl = blob.url;
+    } catch (err) {
+      error = err instanceof Error ? err.message : 'Upload failed';
+    } finally {
+      uploading = false;
     }
-
-    message = data.message ?? '';
-    imageUrl = data.url ?? '';
   }
 
   async function loadImages() {
@@ -78,7 +78,7 @@
 
   <input
     type="file"
-    accept="image/jpeg,image/png,image/webp"
+    accept="image/jpeg,image/png,image/webp,video/mp4"
     onchange={(event) =>
       selectedFile = event.currentTarget.files?.[0] ?? null
     }
@@ -105,7 +105,14 @@
     <a href={imageUrl} target="_blank" rel="noreferrer">
       Open uploaded file
     </a>
-    <img class="preview" src={imageUrl} alt="Uploaded preview" />
+
+    {#if imageUrl.toLowerCase().endsWith('.mp4')}
+      <video src={item.url} controls preload="metadata">
+        <track kind="captions" />
+      </video>
+    {:else}
+      <img class="preview" src={imageUrl} alt="Uploaded preview" />
+    {/if}
   {/if}
 
   <section>
@@ -118,11 +125,18 @@
     </div>
 
     <div class="gallery">
-      {#each images as photo (photo.pathname)}
+      {#each images as item (item.pathname)}
         <article>
-          <img src={photo.url} alt={photo.pathname} />
-          <p class="pathname">{photo.pathname}</p>
-          <button onclick={() => deleteImage(photo.pathname)}>
+          {#if item.pathname.toLowerCase().endsWith('.mp4')}
+            <video src={item.url} controls preload="metadata">
+              <track kind="captions" />
+            </video>
+          {:else}
+            <img src={item.url} alt={item.pathname} />
+          {/if}
+
+          <p class="pathname">{item.pathname}</p>
+          <button onclick={() => deleteImage(item.pathname)}>
             Delete
           </button>
         </article>
@@ -231,7 +245,8 @@
     border-radius: 12px;
   }
 
-  article img {
+  article img,
+  article video {
     width: 100%;
     aspect-ratio: 4 / 3;
     border-radius: 8px;

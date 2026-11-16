@@ -1,2 +1,4 @@
 # Local classroom working copy. It may contain .env.local credentials.
 /practice/
+.vercel
+.env*
