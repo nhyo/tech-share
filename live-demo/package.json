@@ -1,0 +1,98 @@
+{
+  "name": "vercel-blob-live-demo",
+  "displayName": "Vercel Blob Live Demo",
+  "description": "Automated staged live-coding presentation for the Vercel Blob Tech Share.",
+  "version": "1.0.3",
+  "publisher": "tech-share-local",
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Education"
+  ],
+  "activationEvents": [
+    "onCommand:vercelBlobDemo.start"
+  ],
+  "main": "./src/extension.js",
+  "files": [
+    "src/**",
+    "README.md",
+    "VERIFICATION.md"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "vercelBlobDemo.start",
+        "title": "Vercel Blob Demo: Start Presentation Mode"
+      },
+      {
+        "command": "vercelBlobDemo.nextStage",
+        "title": "Vercel Blob Demo: Run Next Step"
+      },
+      {
+        "command": "vercelBlobDemo.pauseResume",
+        "title": "Vercel Blob Demo: Pause or Resume Typing"
+      },
+      {
+        "command": "vercelBlobDemo.skipStage",
+        "title": "Vercel Blob Demo: Skip Animation and Complete Step"
+      },
+      {
+        "command": "vercelBlobDemo.restartStage",
+        "title": "Vercel Blob Demo: Restart Current Step"
+      },
+      {
+        "command": "vercelBlobDemo.restartDemo",
+        "title": "Vercel Blob Demo: Restart from Stage 0"
+      },
+      {
+        "command": "vercelBlobDemo.restoreCheckpoint",
+        "title": "Vercel Blob Demo: Restore Checkpoint"
+      },
+      {
+        "command": "vercelBlobDemo.stop",
+        "title": "Vercel Blob Demo: Exit Presentation Mode"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "vercelBlobDemo.nextStage",
+        "key": "enter",
+        "when": "vercelBlobDemo.presentationMode && editorTextFocus && !terminalFocus && !suggestWidgetVisible && !renameInputVisible"
+      },
+      {
+        "command": "vercelBlobDemo.pauseResume",
+        "key": "ctrl+alt+p",
+        "when": "vercelBlobDemo.presentationMode"
+      },
+      {
+        "command": "vercelBlobDemo.skipStage",
+        "key": "ctrl+alt+s",
+        "when": "vercelBlobDemo.presentationMode"
+      }
+    ],
+    "configuration": {
+      "title": "Vercel Blob Live Demo",
+      "properties": {
+        "vercelBlobDemo.typingDelayMs": {
+          "type": "number",
+          "default": 28,
+          "minimum": 20,
+          "maximum": 60,
+          "description": "Delay between typed characters during the presentation."
+        },
+        "vercelBlobDemo.showEditorEffects": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show VS Code IntelliSense and parameter hints at natural points while the demo types."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "verify": "npm test && node scripts/verify-final.js",
+    "package": "npx --yes @vscode/vsce@3.6.2 package --allow-missing-repository"
+  }
+}

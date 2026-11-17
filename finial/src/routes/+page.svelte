@@ -9,17 +9,13 @@
   let selectedFile = $state<File | null>(null);
   let imageUrl = $state('');
   let error = $state('');
-  let message = $state('');
   let images = $state<GalleryImage[]>([]);
-  let uploading = $state(false);
 
   async function uploadImage() {
     if (!selectedFile) return;
 
     error = '';
-    message = '';
     imageUrl = '';
-    uploading = true;
 
     try {
       const blob = await upload(`tech-share/${selectedFile.name}`, selectedFile, {
@@ -31,8 +27,6 @@
       imageUrl = blob.url;
     } catch (err) {
       error = err instanceof Error ? err.message : 'Upload failed';
-    } finally {
-      uploading = false;
     }
   }
 
@@ -96,10 +90,6 @@
     <p class="error">{error}</p>
   {/if}
 
-  {#if message}
-    <p class="message">{message}</p>
-  {/if}
-
   {#if imageUrl}
     <p class="success">Upload successful!</p>
     <a href={imageUrl} target="_blank" rel="noreferrer">
@@ -107,7 +97,7 @@
     </a>
 
     {#if imageUrl.toLowerCase().endsWith('.mp4')}
-      <video src={item.url} controls preload="metadata">
+      <video src={imageUrl} controls preload="metadata">
         <track kind="captions" />
       </video>
     {:else}
@@ -195,10 +185,6 @@
 
   .error {
     color: #b42318;
-  }
-
-  .message {
-    color: #175cd3;
   }
 
   .success {
