@@ -1,70 +1,4 @@
 <script lang="ts">
-  type GalleryImage = {
-    url: string;
-    pathname: string;
-  };
-
-  let selectedFile = $state<File | null>(null);
-  let imageUrl = $state('');
-  let error = $state('');
-  let message = $state('');
-  let images = $state<GalleryImage[]>([]);
-
-  async function uploadImage() {
-    if (!selectedFile) return;
-
-    error = '';
-    message = '';
-    imageUrl = '';
-    const form = new FormData();
-    form.append('file', selectedFile);
-
-    const response = await fetch('/api/blob', {
-      method: 'POST',
-      body: form
-    });
-
-    const data: { error?: string; message?: string; url?: string } =
-      await response.json();
-
-    if (!response.ok) {
-      error = data.error ?? 'Upload failed';
-      return;
-    }
-
-    message = data.message ?? '';
-    imageUrl = data.url ?? '';
-  }
-
-  async function loadImages() {
-    error = '';
-    const response = await fetch('/api/blob');
-
-    if (!response.ok) {
-      error = 'Failed to load images';
-      return;
-    }
-
-    images = await response.json();
-  }
-
-  async function deleteImage(pathname: string) {
-    error = '';
-    const response = await fetch('/api/blob', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ pathname })
-    });
-
-    if (!response.ok) {
-      error = 'Failed to delete image';
-      return;
-    }
-
-    await loadImages();
-  }
 </script>
 
 <svelte:head>
@@ -76,59 +10,19 @@
   <h1>My Cloud Gallery</h1>
   <p>Choose an image, then upload it to cloud storage.</p>
 
-  <input
-    type="file"
-    accept="image/jpeg,image/png,image/webp"
-    onchange={(event) =>
-      selectedFile = event.currentTarget.files?.[0] ?? null
-    }
-  />
+  <!-- TODO: Add Input -->
 
-  {#if selectedFile}
-    <p class="selected">Selected: {selectedFile.name}</p>
-  {/if}
+  <!-- TODO: Show selected File -->
 
-  <button onclick={uploadImage} disabled={!selectedFile}>
-    Upload
-  </button>
+  <!-- TODO: Add Upload Button -->
 
-  {#if error}
-    <p class="error">{error}</p>
-  {/if}
+  <!-- TODO: Error Handling -->
 
-  {#if message}
-    <p class="message">{message}</p>
-  {/if}
+  <!-- TODO: Add File Preview -->
 
-  {#if imageUrl}
-    <p class="success">Upload successful!</p>
-    <a href={imageUrl} target="_blank" rel="noreferrer">
-      Open uploaded file
-    </a>
-    <img class="preview" src={imageUrl} alt="Uploaded preview" />
-  {/if}
-
-  <section>
-    <div class="section-heading">
-      <div>
-        <p class="eyebrow">Persistent storage</p>
-        <h2>My Gallery</h2>
-      </div>
-      <button onclick={loadImages}>Load Gallery</button>
-    </div>
-
-    <div class="gallery">
-      {#each images as photo (photo.pathname)}
-        <article>
-          <img src={photo.url} alt={photo.pathname} />
-          <p class="pathname">{photo.pathname}</p>
-          <button onclick={() => deleteImage(photo.pathname)}>
-            Delete
-          </button>
-        </article>
-      {/each}
-    </div>
-  </section>
+  <!-- TODO: Add Gallery -->
+    <!-- Gallery Loading Button -->
+    <!-- Gallery list -->
 </main>
 
 <style>
