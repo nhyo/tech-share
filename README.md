@@ -396,3 +396,5 @@ If something goes wrong, compare your code with the completed reference file:
 - Never put a real `BLOB_READ_WRITE_TOKEN` in source code, a README, screenshots, or Git commits;
 - The repository's `.env.example` files contain only credential placeholders;
 - This classroom demo has no authentication, user authorization, or rate limiting and should not be used directly as a public production upload API.
+
+test
