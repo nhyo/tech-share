@@ -4,7 +4,7 @@ import { del, list, put } from '@vercel/blob';
 import { BLOB_READ_WRITE_TOKEN } from '$app/env/private';
 
 export const POST: RequestHandler = async ({ request }) => {
-  /* const form = await request.formData();
+  const form = await request.formData();
   const file = form.get('file');
 
   if (
@@ -28,37 +28,36 @@ export const POST: RequestHandler = async ({ request }) => {
     url: blob.url,
     pathname: blob.pathname
   });
-  */
-  const body = (await request.json()) as HandleUploadBody;
+  // const body = (await request.json()) as HandleUploadBody;
 
-  try {
-    const jsonResponse = await handleUpload({
-      body,
-      request,
-      token: BLOB_READ_WRITE_TOKEN,
-      onBeforeGenerateToken: async (pathname) => {
-        if (!pathname.startsWith('tech-share/')) {
-          throw new Error('Invalid upload path');
-        }
+  // try {
+  //   const jsonResponse = await handleUpload({
+  //     body,
+  //     request,
+  //     token: BLOB_READ_WRITE_TOKEN,
+  //     onBeforeGenerateToken: async (pathname) => {
+  //       if (!pathname.startsWith('tech-share/')) {
+  //         throw new Error('Invalid upload path');
+  //       }
 
-        return {
-          allowedContentTypes: ['image/jpeg', 'image/png', 'image/webp', 'video/mp4'],
-          maximumSizeInBytes: 500 * 1024 * 1024,
-          addRandomSuffix: true,
-        };
-      },
-      onUploadCompleted: async ({ blob }) => {
-        console.log('Uploaded to:', blob.url);
-      },
-    });
+  //       return {
+  //         allowedContentTypes: ['image/jpeg', 'image/png', 'image/webp', 'video/mp4'],
+  //         maximumSizeInBytes: 500 * 1024 * 1024,
+  //         addRandomSuffix: true,
+  //       };
+  //     },
+  //     onUploadCompleted: async ({ blob }) => {
+  //       console.log('Uploaded to:', blob.url);
+  //     },
+  //   });
   
-    return Response.json(jsonResponse);
-  } catch (error) {
-    return Response.json(
-      { error: error instanceof Error ? error.message : 'Upload failed' },
-      { status: 400 }
-    );
-  }
+  //   return Response.json(jsonResponse);
+  // } catch (error) {
+  //   return Response.json(
+  //     { error: error instanceof Error ? error.message : 'Upload failed' },
+  //     { status: 400 }
+  //   );
+  // }
 };
 
 export const GET: RequestHandler = async () => {

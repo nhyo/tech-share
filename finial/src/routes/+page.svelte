@@ -19,21 +19,25 @@
     error = '';
     message = '';
     imageUrl = '';
-    uploading = true;
 
-    try {
-      const blob = await upload(`tech-share/${selectedFile.name}`, selectedFile, {
-        access: 'public',
-        handleUploadUrl: '/api/blob',
-        multipart: selectedFile.size > 100 * 1024 * 1024
-      });
-      
-      imageUrl = blob.url;
-    } catch (err) {
-      error = err instanceof Error ? err.message : 'Upload failed';
-    } finally {
-      uploading = false;
+    const form = new FormData();
+    form.append('file', selectedFile);
+
+    const response = await fetch('/api/blob', {
+      method: 'POST',
+      body: form
+    });
+
+    const data: { error?: string; message?: string; url?: string } =
+      await response.json();
+
+    if (!response.ok) {
+      error = data.error ?? 'Upload failed';
+      return;
     }
+
+    message = data.message ?? '';
+    imageUrl = data.url ?? '';
   }
 
   async function loadImages() {
