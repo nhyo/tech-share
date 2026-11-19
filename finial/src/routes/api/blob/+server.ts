@@ -1,4 +1,3 @@
-import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import type { RequestHandler } from './$types';
 import { del, list } from '@vercel/blob';
 import { BLOB_READ_WRITE_TOKEN } from '$app/env/private';
@@ -6,17 +5,6 @@ import { BLOB_READ_WRITE_TOKEN } from '$app/env/private';
 export const POST: RequestHandler = async ({ request }) => {
   const form = await request.formData();
   const file = form.get('file');
-
-  if (
-    !(file instanceof File) ||
-    !['image/jpeg', 'image/png', 'image/webp', 'video/mp4'].includes(file.type) ||
-    file.size > 4 * 1024 * 1024
-  ) {
-    return Response.json(
-      { error: 'Choose a JPG, PNG, WebP or mp4 image under 4 MB' },
-      { status: 400 }
-    );
-  }
 
   const blob = await put(`tech-share/${file.name}`, file, {
     access: 'public',
