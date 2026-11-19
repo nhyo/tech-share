@@ -397,4 +397,9 @@ If something goes wrong, compare your code with the completed reference file:
 - The repository's `.env.example` files contain only credential placeholders;
 - This classroom demo has no authentication, user authorization, or rate limiting and should not be used directly as a public production upload API.
 
-test
+## Citations
+1. "Vercel Blob Documentation." https://vercel.com/docs/vercel-blob ^1
+2. Ben Sabic. (2026). "The Complete Guide to Vercel Blob."  https://vercel.com/kb/guide/vercel-blob ^2
+3. "Vercel Blob About Page." https://vercel.com/storage/blob ^3
+4. "Vercel Blob SvelteKit Starter." https://vercel.com/templates/svelte/blob-sveltekit ^4
+5. "Basic SvelteKit/API routes/Get handlers". https://svelte.dev/tutorial/kit/get-handlers ^5
