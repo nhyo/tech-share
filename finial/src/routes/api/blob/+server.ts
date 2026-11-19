@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types';
-import { del, list } from '@vercel/blob';
+import { del, list, put } from '@vercel/blob';
 import { BLOB_READ_WRITE_TOKEN } from '$app/env/private';
 
 export const POST: RequestHandler = async ({ request }) => {
